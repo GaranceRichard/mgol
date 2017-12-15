@@ -1,0 +1,2 @@
+# mgol
+Essais sur pygame
