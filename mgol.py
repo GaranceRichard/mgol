@@ -1,9 +1,34 @@
 import pygame
 import numpy as np
 from pygame.locals import *
+from tkinter import *
 
-screen_size=900
-cases = 100
+window = Tk()
+window.title("Jeu de la vie")
+screen=IntVar()
+case = IntVar()
+
+def sel():
+	global screen_size, cases
+	screen_size = screen.get()
+	cases = case.get()
+	window.destroy()
+
+text1 = Label(window,text="Paramètres de l'application :")
+scale1 = Scale(window, variable = screen, orient='horizontal', from_=500, to=1000,
+      resolution=10, tickinterval=100, length=500,
+      label='Taille de l\'écran')
+scale2 = Scale(window, variable = case, orient='horizontal', from_=10, to=100,
+      resolution=1, tickinterval=10, length=500,
+      label='Cases par cotés')
+button = Button(window, text="Valider", command = sel)
+text1.pack()
+scale1.pack()
+scale2.pack()
+button.pack(anchor=CENTER)
+window.mainloop()
+
+
 white = (255,255,255)
 black = (0,0,0)
 red = (255,0,0)
@@ -30,7 +55,7 @@ def maj(screen):
 	pygame.display.update()
 
 pygame.init()
-fenetre = pygame.display.set_mode((int(screen_size*1.12),screen_size))
+fenetre = pygame.display.set_mode((int(screen_size+150),screen_size))
 pygame.display.set_caption('Jeu de la vie')
 maj(fenetre)
 
@@ -53,7 +78,7 @@ while test == 1:
 					maj(fenetre)
 					pygame.display.update()
 				except IndexError:
-					pygame.draw.rect(fenetre, green, (matrice.shape[0]*unit,0,(int(screen_size*1.12)-matrice.shape[0]),screen_size),0)
+					pygame.draw.rect(fenetre, green, (matrice.shape[0]*unit,0,(int(screen_size+150)-matrice.shape[0]),screen_size),0)
 					pygame.display.update()
 					continuer = 2
 
