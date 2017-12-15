@@ -8,8 +8,10 @@ cases = 10
 white = (255,255,255)
 black = (0,0,0)
 red = (255,0,0)
+green = (0,255,0)
 matrice = np.zeros((cases,cases))
 unit = screen_size/cases
+continuer = 1
 
 def maj(screen):
 	fenetre.fill(white)
@@ -27,7 +29,6 @@ maj(fenetre)
 
 
 
-continuer = 1
 
 while continuer:
 	for event in pygame.event.get():
@@ -44,5 +45,7 @@ while continuer:
 				maj(fenetre)
 				pygame.display.update()
 			except:
+				pygame.draw.rect(fenetre, green, (matrice.shape[0]*unit,0,(int(screen_size*1.1)-matrice.shape[0]),screen_size),0)
+				pygame.display.update()
 				print('launch')
 
