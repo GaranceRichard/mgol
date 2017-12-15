@@ -25,6 +25,7 @@ scale2 = Scale(window, variable = case, orient='horizontal', from_=10, to=100,
       label='Cases par cotés :')
 scale2.config(font=("monospace",12))
 button = Button(window, text="Valider", command = sel)
+button.config(font=("monospace",12))
 text1.pack()
 scale1.pack()
 scale2.pack()
