@@ -3,8 +3,8 @@ import numpy as np
 from pygame.locals import *
 
 
-screen_size=500
-cases = 10
+screen_size=700
+cases = 100
 white = (255,255,255)
 black = (0,0,0)
 red = (255,0,0)
@@ -30,7 +30,7 @@ maj(fenetre)
 
 
 
-while continuer:
+while continuer == 1: # boucle d'initialisation du panel
 	for event in pygame.event.get():
 		if event.type == QUIT:
 			continuer = 0
@@ -47,5 +47,50 @@ while continuer:
 			except:
 				pygame.draw.rect(fenetre, green, (matrice.shape[0]*unit,0,(int(screen_size*1.1)-matrice.shape[0]),screen_size),0)
 				pygame.display.update()
-				print('launch')
+				continuer = 2
+
+while continuer == 2: # lancement du game of life
+	control_matrice = np.pad(matrice,1,'constant')
+	future_matrice = np.zeros((cases+2,cases+2))
+	next_matrice = np.zeros((cases,cases))
+	
+
+	def control(x,y):
+		try:
+			control_array = [0]*8	
+			control_array[0] = control_matrice.item((x-1,y+1))
+			control_array[1] = control_matrice.item((x,y+1))
+			control_array[2] = control_matrice.item((x+1,y+1))
+			control_array[3] = control_matrice.item((x-1,y))
+			control_array[4] = control_matrice.item((x+1,y))
+			control_array[5] = control_matrice.item((x-1,y-1))
+			control_array[6] = control_matrice.item((x,y-1))
+			control_array[7] = control_matrice.item((x+1,y-1))
+		except:
+			pass
+		return sum(control_array)
+
+	for x in range(control_matrice.shape[0]):
+			for y in range(control_matrice.shape[1]):
+				a=control(x,y)
+				future_matrice[(x,y)] = a
+
+	future_matrice = future_matrice[1:-1,1:-1]
+
+	for x in range(future_matrice.shape[0]):
+		for y in range(future_matrice.shape[1]):
+			if matrice.item((x,y)) ==  0 and future_matrice.item((x,y)) == 3:
+				next_matrice[(x,y)] = 1
+			if matrice.item((x,y)) ==  1 and (future_matrice.item((x,y)) == 3):
+				next_matrice[(x,y)] = 1
+			if matrice.item((x,y)) ==  1 and (future_matrice.item((x,y)) == 2):
+				next_matrice[(x,y)] = 1
+
+	matrice = next_matrice
+	maj(fenetre)
+	pygame.display.update()
+
+	for event in pygame.event.get():
+			if event.type == QUIT:
+				continuer = 0
 
