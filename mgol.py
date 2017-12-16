@@ -17,7 +17,7 @@ def sel():
 text1 = Label(window,text="Paramètres de l'application :")
 text1.config(font=("monospace",15))
 scale1 = Scale(window, variable = screen, orient='horizontal', from_=500, to=1000,
-      resolution=10, tickinterval=100, length=500,
+      resolution=50, tickinterval=100, length=500,
       label='Taille de l\'écran :')
 scale1.config(font=("monospace",12))
 scale2 = Scale(window, variable = case, orient='horizontal', from_=10, to=100,
@@ -146,9 +146,13 @@ while test == 1:
 				if matrice.item((x,y)) ==  1 and (future_matrice.item((x,y)) == 2):
 					next_matrice[(x,y)] = 1
 
-		matrice = next_matrice
-		maj(fenetre)
-		pygame.display.update()
+
+		if (matrice == next_matrice).all():
+			continuer = 1
+		else:
+			matrice = next_matrice
+			maj(fenetre)
+			pygame.display.update()
 
 		for event in pygame.event.get():
 				if event.type == QUIT:
