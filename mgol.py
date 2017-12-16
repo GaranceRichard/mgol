@@ -21,7 +21,7 @@ scale1 = Scale(window, variable = screen, orient='horizontal', from_=500, to=100
       label='Taille de l\'écran :')
 scale1.config(font=("monospace",12))
 scale2 = Scale(window, variable = case, orient='horizontal', from_=10, to=100,
-      resolution=1, tickinterval=10, length=500,
+      resolution=10, tickinterval=10, length=500,
       label='Cases par cotés :')
 scale2.config(font=("monospace",12))
 button = Button(window, text="Valider", command = sel)
@@ -46,12 +46,16 @@ etat_du_jeu = "Lancer"
 def maj(screen):
 	fenetre.fill(white)
 	myfont = pygame.font.SysFont("monospace", 25,bold=True)
+	label0 = myfont.render("Génération :", 1, red)
 	label = myfont.render(str(repeat), 1, red)
 	label2 = myfont.render(str(etat_du_jeu), 1, black)
+	label2b = myfont.render("taille :", 1, green)
 	label3 = myfont.render(str(matrice.shape[0]**2), 1, green)
-	fenetre.blit(label, (screen_size+10, 10))
+	fenetre.blit(label0, (screen_size+10, 10))
+	fenetre.blit(label, (screen_size+10, 30))
 	fenetre.blit(label2, (screen_size+10, screen_size/2))
-	fenetre.blit(label3, (screen_size+10, 50))	
+	fenetre.blit(label2b, (screen_size+10, 70))
+	fenetre.blit(label3, (screen_size+10, 90))	
 	for x in range(matrice.shape[0]):
 			for y in range(matrice.shape[1]):
 				if matrice.item((x,y)) == 0 and matrice.shape[0]<100:
@@ -61,7 +65,7 @@ def maj(screen):
 	pygame.display.update()
 
 pygame.init()
-fenetre = pygame.display.set_mode((int(screen_size+150),screen_size))
+fenetre = pygame.display.set_mode((int(screen_size+200),screen_size))
 pygame.display.set_caption('Jeu de la vie')
 maj(fenetre)
 
@@ -95,9 +99,11 @@ while test == 1:
 						matrice[tuple(pos)] = 0
 					maj(fenetre)
 					pygame.display.update()
+					pygame.time.wait(100)
 				except IndexError:
 					pygame.draw.rect(fenetre, green, (matrice.shape[0]*unit,0,(int(screen_size+150)-matrice.shape[0]),screen_size),0)
 					pygame.display.update()
+					pygame.time.wait(100)
 					continuer = 2
 
 	while continuer == 2: # lancement du game of life
@@ -170,9 +176,11 @@ while test == 1:
 							matrice[tuple(pos)] = 0
 						maj(fenetre)
 						pygame.display.update()
+						pygame.time.wait(100)
 					except IndexError:
 						etat_du_jeu = "Lancer"
 						maj(fenetre)
+						pygame.time.wait(100)
 						continuer = 1
 
 
