@@ -46,13 +46,15 @@ etat_du_jeu = "Lancer"
 def maj(screen):
 	fenetre.fill(white)
 	myfont = pygame.font.SysFont("monospace", 25,bold=True)
-	label = myfont.render(str(repeat), 1, (255,0,0))
-	label2 = myfont.render(str(etat_du_jeu), 1, (0,0,0))
+	label = myfont.render(str(repeat), 1, red)
+	label2 = myfont.render(str(etat_du_jeu), 1, black)
+	label3 = myfont.render(str(matrice.shape[0]**2), 1, green)
 	fenetre.blit(label, (screen_size+10, 10))
-	fenetre.blit(label2, (screen_size+10, screen_size/2))	
+	fenetre.blit(label2, (screen_size+10, screen_size/2))
+	fenetre.blit(label3, (screen_size+10, 50))	
 	for x in range(matrice.shape[0]):
 			for y in range(matrice.shape[1]):
-				if matrice.item((x,y)) == 0:
+				if matrice.item((x,y)) == 0 and matrice.shape[0]<100:
 					pygame.draw.rect(screen, black,(x*unit,y*unit,unit,unit),1)
 				elif matrice.item((x,y)) == 1:
 					pygame.draw.rect(screen, red,(x*unit,y*unit,unit,unit),0)
@@ -71,9 +73,21 @@ while test == 1:
 			if event.type == QUIT:
 				test = 0
 				continuer = 0
-			if event.type == pygame.MOUSEBUTTONUP:
+			if event.type == pygame.MOUSEBUTTONDOWN:
+				if event.button == 4 and matrice.shape[0]>2:
+					matrice = matrice[1:-1,1:-1]
+					cases = matrice.shape[0]
+					unit = screen_size/cases
+					maj(fenetre)
+				if event.button == 5:
+					matrice = np.pad(matrice,1,'constant')
+					cases = matrice.shape[0]
+					unit = screen_size/cases
+					maj(fenetre)
+
+			if pygame.mouse.get_pressed() == (1,0,0):
 				pos = pygame.mouse.get_pos()
-				pos = (np.asarray(pos)/(screen_size/cases)).astype(int)
+				pos = (np.asarray(pos)/(screen_size/matrice.shape[0])).astype(int)
 				try:
 					if matrice.item(tuple(pos)) == 0:
 						matrice[tuple(pos)] = 1
@@ -134,9 +148,21 @@ while test == 1:
 				if event.type == QUIT:
 					test = 0
 					continuer = 0
-				if event.type == MOUSEBUTTONUP:
+				if event.type == pygame.MOUSEBUTTONDOWN:
+					if event.button == 4 and matrice.shape[0]>2:
+						matrice = matrice[1:-1,1:-1]
+						cases = matrice.shape[0]
+						unit = screen_size/cases
+						maj(fenetre)
+					if event.button == 5:
+						matrice = np.pad(matrice,1,'constant')
+						cases = matrice.shape[0]
+						unit = screen_size/cases
+						maj(fenetre)
+
+				if pygame.mouse.get_pressed() == (1,0,0):
 					pos = pygame.mouse.get_pos()
-					pos = (np.asarray(pos)/(screen_size/cases)).astype(int)
+					pos = (np.asarray(pos)/(screen_size/matrice.shape[0])).astype(int)
 					try:
 						if matrice.item(tuple(pos)) == 0:
 							matrice[tuple(pos)] = 1
