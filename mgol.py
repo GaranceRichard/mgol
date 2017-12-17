@@ -1,36 +1,7 @@
 import pygame
 import numpy as np
 from pygame.locals import *
-from tkinter import *
-
-window = Tk()
-window.title("Jeu de la vie")
-screen=IntVar()
-case = IntVar()
-
-def sel():
-	global screen_size, cases
-	screen_size = screen.get()
-	cases = case.get()
-	window.destroy()
-
-text1 = Label(window,text="Paramètres de l'application :")
-text1.config(font=("monospace",15))
-scale1 = Scale(window, variable = screen, orient='horizontal', from_=500, to=1000,
-      resolution=50, tickinterval=100, length=500,
-      label='Taille de l\'écran :')
-scale1.config(font=("monospace",12))
-scale2 = Scale(window, variable = case, orient='horizontal', from_=10, to=100,
-      resolution=10, tickinterval=10, length=500,
-      label='Cases par cotés :')
-scale2.config(font=("monospace",12))
-button = Button(window, text="Valider", command = sel)
-button.config(font=("monospace",12))
-text1.pack()
-scale1.pack()
-scale2.pack()
-button.pack(anchor=CENTER)
-window.mainloop()
+from interface import *
 
 
 white = (255,255,255)
@@ -45,6 +16,7 @@ repeat = 0
 etat_du_jeu = "Lancer"
 
 def maj(screen):
+	#mise à jour de l'écran
 	fenetre.fill(white)
 	myfont = pygame.font.SysFont("monospace", 25,bold=True)
 	label0 = myfont.render("Génération :", 1, red)
@@ -59,7 +31,7 @@ def maj(screen):
 	fenetre.blit(label3, (screen_size+10, 90))	
 	for x in range(matrice.shape[0]):
 			for y in range(matrice.shape[1]):
-				if matrice.item((x,y)) == 0 and matrice.shape[0]<100:
+				if matrice.item((x,y)) == 0 and matrice.shape[0]<=100:
 					pygame.draw.rect(screen, black,(x*unit,y*unit,unit,unit),1)
 				elif matrice.item((x,y)) == 1:
 					pygame.draw.rect(screen, red,(x*unit,y*unit,unit,unit),0)
@@ -99,13 +71,11 @@ while test == 1:
 				if event.button == 4 and matrice.shape[0]>2:
 					matrice = matrice[1:-1,1:-1]
 					cases = matrice.shape[0]
-					unit = screen_size/cases
-					maj(fenetre)
 				if event.button == 5:
 					matrice = np.pad(matrice,1,'constant')
 					cases = matrice.shape[0]
-					unit = screen_size/cases
-					maj(fenetre)
+				unit = screen_size/cases
+				maj(fenetre)
 
 			if pygame.mouse.get_pressed() == (1,0,0):
 				pos = pygame.mouse.get_pos()
@@ -159,13 +129,11 @@ while test == 1:
 					if event.button == 4 and matrice.shape[0]>2:
 						matrice = matrice[1:-1,1:-1]
 						cases = matrice.shape[0]
-						unit = screen_size/cases
-						maj(fenetre)
 					if event.button == 5:
 						matrice = np.pad(matrice,1,'constant')
 						cases = matrice.shape[0]
-						unit = screen_size/cases
-						maj(fenetre)
+					unit = screen_size/cases
+					maj(fenetre)
 
 				if pygame.mouse.get_pressed() == (1,0,0):
 					pos = pygame.mouse.get_pos()
