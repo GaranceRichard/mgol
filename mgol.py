@@ -54,6 +54,33 @@ def control(x,y):
 		pass
 	return sum(control_array)
 
+def click(button):
+	global matrice, cases, unit, continuer
+	if button == 4 and matrice.shape[0]>2:
+		matrice = matrice[1:-1,1:-1]
+		cases = matrice.shape[0]
+	if button == 5:
+		matrice = np.pad(matrice,1,'constant')
+		cases = matrice.shape[0]
+	if button == 1:
+		pos = pygame.mouse.get_pos()
+		pos = (np.asarray(pos)/(screen_size/matrice.shape[0])).astype(int)
+		try:
+			if matrice.item(tuple(pos)) == 0:
+				matrice[tuple(pos)] = 1
+			else:
+				matrice[tuple(pos)] = 0
+		except IndexError:
+			pygame.draw.rect(fenetre, green, (matrice.shape[0]*unit,0,(int(screen_size+200)-matrice.shape[0]),screen_size),0)
+			pygame.display.update()
+			if continuer == 1:
+				continuer = 2
+			else:
+				continuer = 1
+	unit = screen_size/cases
+	maj(fenetre)
+	pygame.display.update()
+
 pygame.init()
 fenetre = pygame.display.set_mode((int(screen_size+200),screen_size))
 pygame.display.set_caption('Jeu de la vie')
@@ -62,37 +89,14 @@ maj(fenetre)
 test = 1
 while test == 1:
 	while continuer == 1: # boucle d'initialisation du panel
-		# repeat = 0
 		for event in pygame.event.get():
 			if event.type == QUIT:
 				test = 0
 				continuer = 0
 			if event.type == pygame.MOUSEBUTTONDOWN:
-				if event.button == 4 and matrice.shape[0]>2:
-					matrice = matrice[1:-1,1:-1]
-					cases = matrice.shape[0]
-				if event.button == 5:
-					matrice = np.pad(matrice,1,'constant')
-					cases = matrice.shape[0]
-				unit = screen_size/cases
-				maj(fenetre)
-
-			if pygame.mouse.get_pressed() == (1,0,0):
-				pos = pygame.mouse.get_pos()
-				pos = (np.asarray(pos)/(screen_size/matrice.shape[0])).astype(int)
-				try:
-					if matrice.item(tuple(pos)) == 0:
-						matrice[tuple(pos)] = 1
-					else:
-						matrice[tuple(pos)] = 0
-					maj(fenetre)
-					pygame.display.update()
-					pygame.time.wait(100)
-				except IndexError:
-					pygame.draw.rect(fenetre, green, (matrice.shape[0]*unit,0,(int(screen_size+200)-matrice.shape[0]),screen_size),0)
-					pygame.display.update()
-					pygame.time.wait(100)
-					continuer = 2
+				click(event.button)
+				
+				
 
 	while continuer == 2: # lancement du game of life
 		etat_du_jeu = "arrêter"
@@ -126,30 +130,4 @@ while test == 1:
 					test = 0
 					continuer = 0
 				if event.type == pygame.MOUSEBUTTONDOWN:
-					if event.button == 4 and matrice.shape[0]>2:
-						matrice = matrice[1:-1,1:-1]
-						cases = matrice.shape[0]
-					if event.button == 5:
-						matrice = np.pad(matrice,1,'constant')
-						cases = matrice.shape[0]
-					unit = screen_size/cases
-					maj(fenetre)
-
-				if pygame.mouse.get_pressed() == (1,0,0):
-					pos = pygame.mouse.get_pos()
-					pos = (np.asarray(pos)/(screen_size/matrice.shape[0])).astype(int)
-					try:
-						if matrice.item(tuple(pos)) == 0:
-							matrice[tuple(pos)] = 1
-						else:
-							matrice[tuple(pos)] = 0
-						maj(fenetre)
-						pygame.display.update()
-						pygame.time.wait(100)
-					except IndexError:
-						etat_du_jeu = "Lancer"
-						maj(fenetre)
-						pygame.time.wait(100)
-						continuer = 1
-
-
+					click(event.button)
