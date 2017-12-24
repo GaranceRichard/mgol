@@ -3,20 +3,29 @@ import numpy as np
 from pygame.locals import *
 from interface import *
 
-
-white = (255,255,255)
-black = (0,0,0)
-red = (255,0,0)
-green = (0,255,0)
-
+couleur=1
 matrice = np.zeros((cases,cases))
 unit = screen_size/cases
 continuer = 1
 repeat = 0
 etat_du_jeu = "Lancer"
 
+def colors(couleur):
+	global white, black, red, green
+	if couleur == 1:
+		white = (255,255,255)
+		black = (0,0,0)
+		red = (255,0,0)
+		green = (0,255,0)
+	if couleur == 2:
+		black = (255,255,255)
+		white = (0,0,0)
+		red = (255,0,0)
+		green = (0,255,0)
+
 def maj(screen):
 	#mise à jour de l'écran
+	colors(couleur)
 	fenetre.fill(white)
 	myfont = pygame.font.SysFont("monospace", 25,bold=True)
 	label0 = myfont.render("Génération :", 1, red)
@@ -59,16 +68,21 @@ def control(x,y):
 	return sum(control_array)
 
 def click(button):
-	global matrice, cases, unit, continuer
+	global matrice, cases, unit, continuer,couleur
 	if button == 4 and matrice.shape[0]>2:
 		matrice = matrice[1:-1,1:-1]
 		cases = matrice.shape[0]
 	if button == 5:
 		matrice = np.pad(matrice,1,'constant')
 		cases = matrice.shape[0]
-	if button == 2:
+	if button == 3:
 		transitoire = ((matrice*8)+np.random.randint(11,size=matrice.shape))>7
 		matrice = transitoire+0
+	if button == 2:
+		if couleur == 1:
+			couleur = 2
+		else:
+			couleur = 1
 	if button == 1:
 		pos = pygame.mouse.get_pos()
 		pos = (np.asarray(pos)/(screen_size/matrice.shape[0])).astype(int)
@@ -90,6 +104,7 @@ def click(button):
 	pygame.display.update()
 
 pygame.init()
+colors(couleur)
 fenetre = pygame.display.set_mode((int(screen_size+200),screen_size))
 pygame.display.set_caption('Jeu de la vie')
 maj(fenetre)
