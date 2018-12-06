@@ -37,7 +37,7 @@ def maj(screen):
 	fenetre.blit(label, (screen_size+10, 30))
 	fenetre.blit(label2, (screen_size+10, screen_size/2))
 	fenetre.blit(label2b, (screen_size+10, 70))
-	fenetre.blit(label3, (screen_size+10, 90))	
+	fenetre.blit(label3, (screen_size+10, 90))
 	for x in range(matrice.shape[0]):
 		if matrice.shape[0]>100 and matrice[x].max()==0:
 			pass
@@ -54,7 +54,7 @@ def maj(screen):
 def control(x,y):
 	#fonction de contrôle qui permet de compter l'entourage d'une cellule
 	try:
-		control_array = [0]*8	
+		control_array = [0]*8
 		control_array[0] = control_matrice.item((x-1,y+1))
 		control_array[1] = control_matrice.item((x,y+1))
 		control_array[2] = control_matrice.item((x+1,y+1))
@@ -68,7 +68,7 @@ def control(x,y):
 	return sum(control_array)
 
 def click(button):
-	global matrice, cases, unit, continuer,couleur
+	global matrice, cases, unit, continuer,couleur, etat_du_jeu
 	if button == 4 and matrice.shape[0]>2:
 		matrice = matrice[1:-1,1:-1]
 		cases = matrice.shape[0]
@@ -97,6 +97,7 @@ def click(button):
 			if continuer == 1:
 				continuer = 2
 			else:
+				etat_du_jeu = "Lancer"
 				continuer = 1
 
 	unit = screen_size/cases
@@ -111,19 +112,19 @@ maj(fenetre)
 
 test = 1
 while test == 1:
-	etat_du_jeu = "Lancer"
 	while continuer == 1: # boucle d'initialisation du panel
+		etat_du_jeu = "Lancer"
 		for event in pygame.event.get():
 			if event.type == QUIT:
 				test = 0
 				continuer = 0
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				click(event.button)
-				
-				
+
+
 
 	while continuer == 2: # lancement du game of life
-		etat_du_jeu = "arrêter"
+		etat_du_jeu = "Arrêter"
 		repeat += 1
 		control_matrice = np.pad(matrice,1,'constant') 	#on crée une matrice copie entourée de zéros
 		future_matrice = np.zeros((cases+2,cases+2))	#la matrice de retour des entourage
@@ -144,8 +145,10 @@ while test == 1:
 					next_matrice[(x,y)] = 1
 
 		if (matrice == next_matrice).all():
+			etat_du_jeu = "Arrêté"
 			maj(fenetre)
 			continuer = 1
+
 		else:
 			matrice = next_matrice
 			maj(fenetre)
